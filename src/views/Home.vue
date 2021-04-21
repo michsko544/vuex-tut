@@ -1,35 +1,40 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <h1 :style="{ color: $store.state.colorCode }">
-      {{$store.state.count}}
+    <h1 :style="{ color: store.state.colorCode }">
+      {{store.state.counter}}
     </h1>
     <h1>
-      {{$store.state.count}}
+      {{store.state.counter}}
       <sup>2</sup>=
-      {{$store.getters.countSquared}}
+      {{store.getters.counterSquared()}}
     </h1>
     <div>
-      <button @click="$store.dispatch('decreaseRandomCount')">-</button>
-      <button @click="$store.dispatch('increaseRandomCount')">+</button>
+      <button @click="store.methods.decreaseCounter">-</button>
+      <button @click="store.methods.increaseCounter">+</button>
     </div>
     <input type="text" placeholder="Enter color code" v-model="colorCode">
   </div>
 </template>
 
 <script>
+import { inject, computed } from "vue"
 
 export default {
   name: 'Home',
-  computed: {
-    colorCode: {
+  setup(){
+    const store = inject("store")
+
+    const colorCode = computed({
       get(){
-        return this.$store.state.colorCode
+        return store.state.colorCode
       },
-      set(newValue){
-        this.$store.commit("setColorCode", newValue)
+      set(val){
+        store.methods.setColorCode(val)
       }
-    }
+    })
+
+    return {store,colorCode}
   }
 }
 </script>
